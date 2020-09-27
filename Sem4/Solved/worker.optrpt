@@ -1,0 +1,151 @@
+Intel(R) Advisor can now assist with vectorization and show optimization
+  report messages with your source code.
+See "https://software.intel.com/en-us/intel-advisor-xe" for details.
+
+Intel(R) C++ Intel(R) 64 Compiler for applications running on Intel(R) 64, Version 17.0.2.174 Build 20170213
+
+Compiler options: -c -qopt-report=5 -xMIC-AVX512 -qopenmp -mkl -lmemkind -o worker.o
+
+    Report from: Interprocedural optimizations [ipo]
+
+  WHOLE PROGRAM (SAFE) [EITHER METHOD]: false
+  WHOLE PROGRAM (SEEN) [TABLE METHOD]: false
+  WHOLE PROGRAM (READ) [OBJECT READER METHOD]: false
+
+INLINING OPTION VALUES:
+  -inline-factor: 100
+  -inline-min-size: 30
+  -inline-max-size: 230
+  -inline-max-total-size: 2000
+  -inline-max-per-routine: 10000
+  -inline-max-per-compile: 500000
+
+In the inlining report below:
+   "sz" refers to the "size" of the routine. The smaller a routine's size,
+      the more likely it is to be inlined.
+   "isz" refers to the "inlined size" of the routine. This is the amount
+      the calling routine will grow if the called routine is inlined into it.
+      The compiler generally limits the amount a routine can grow by having
+      routines inlined into it.
+
+Begin optimization report for: runFFTs(size_t, size_t, MKL_Complex8 *, DFTI_DESCRIPTOR_HANDLE *)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (runFFTs(size_t, size_t, MKL_Complex8 *, DFTI_DESCRIPTOR_HANDLE *)) [1/2=50.0%] worker.cc(5,115)
+  -> EXTERN: (8,3) hbw_posix_memalign(void **, size_t, size_t)
+  -> EXTERN: (15,5) DftiComputeForward(DFTI_DESCRIPTOR_HANDLE, void *, ...)
+
+
+    Report from: OpenMP optimizations [openmp]
+
+worker.cc(11:1-11:1):OMP:_Z7runFFTsmmP13_MKL_Complex8PP15DFTI_DESCRIPTOR:  OpenMP DEFINED LOOP WAS PARALLELIZED
+worker.cc(16:1-16:1):OMP:_Z7runFFTsmmP13_MKL_Complex8PP15DFTI_DESCRIPTOR:  OpenMP DEFINED LOOP WAS PARALLELIZED
+
+    Report from: Loop nest, Vector & Auto-parallelization optimizations [loop, vec, par]
+
+
+LOOP BEGIN at worker.cc(11,1)
+   remark #15344: loop was not vectorized: vector dependence prevents vectorization
+   remark #15346: vector dependence: assumed FLOW dependence between buff[j] (13:17) and data (13:17)
+   remark #15346: vector dependence: assumed ANTI dependence between data (13:17) and buff[j] (13:17)
+   remark #25439: unrolled with remainder by 2  
+LOOP END
+
+LOOP BEGIN at worker.cc(11,1)
+<Remainder>
+LOOP END
+
+LOOP BEGIN at worker.cc(16,1)
+   remark #15344: loop was not vectorized: vector dependence prevents vectorization
+   remark #15346: vector dependence: assumed FLOW dependence between data (18:30) and buff[j] (18:30)
+   remark #15346: vector dependence: assumed ANTI dependence between buff[j] (18:30) and data (18:30)
+   remark #25439: unrolled with remainder by 2  
+LOOP END
+
+LOOP BEGIN at worker.cc(16,1)
+<Remainder>
+LOOP END
+
+
+Non-optimizable loops:
+
+
+LOOP BEGIN at worker.cc(10,3)
+   remark #15521: loop was not vectorized: loop control variable was not identified. Explicitly compute the iteration count before executing the loop or try using canonical loop form from OpenMP specification
+LOOP END
+
+    Report from: Code generation optimizations [cg]
+
+worker.cc(5,115):remark #34051: REGISTER ALLOCATION : [_Z7runFFTsmmP13_MKL_Complex8PP15DFTI_DESCRIPTOR] worker.cc:5
+
+    Hardware registers
+        Reserved     :    2[ rsp rip]
+        Available    :   63[ rax rdx rcx rbx rbp rsi rdi r8-r15 mm0-mm7 zmm0-zmm31 k0-k7]
+        Callee-save  :    6[ rbx rbp r12-r15]
+        Assigned     :   15[ rax rdx rcx rbx rbp rsi rdi r8-r15]
+        
+    Routine temporaries
+        Total         :     240
+            Global    :      54
+            Local     :     186
+        Regenerable   :      81
+        Spilled       :       0
+        
+    Routine stack
+        Variables     :      68 bytes*
+            Reads     :      11 [1.10e+01 ~ 0.5%]
+            Writes    :      13 [2.08e+02 ~ 10.1%]
+        Spills        :      48 bytes*
+            Reads     :      18 [6.00e+00 ~ 0.3%]
+            Writes    :      18 [6.60e+01 ~ 3.2%]
+    
+    Notes
+    
+        *Non-overlapping variables and spills may share stack space,
+         so the total stack size might be less than this.
+    
+
+===========================================================================
+
+Begin optimization report for: __sti__$E()
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (__sti__$E()) [2/2=100.0%] <compiler generated>
+  -> EXTERN: /usr/include/c++/4.8.5/iostream:(74,25) __cxa_atexit()
+  -> EXTERN: /usr/include/c++/4.8.5/iostream:(74,25) std::ios_base::Init::Init(std::ios_base::Init *)
+
+
+    Report from: Code generation optimizations [cg]
+
+<compiler generated>:remark #34051: REGISTER ALLOCATION : [__sti__$E] (null):0
+
+    Hardware registers
+        Reserved     :    2[ rsp rip]
+        Available    :   63[ rax rdx rcx rbx rbp rsi rdi r8-r15 mm0-mm7 zmm0-zmm31 k0-k7]
+        Callee-save  :    6[ rbx rbp r12-r15]
+        Assigned     :    3[ rdx rsi rdi]
+        
+    Routine temporaries
+        Total         :      13
+            Global    :       7
+            Local     :       6
+        Regenerable   :       7
+        Spilled       :       0
+        
+    Routine stack
+        Variables     :       0 bytes*
+            Reads     :       0 [0.00e+00 ~ 0.0%]
+            Writes    :       0 [0.00e+00 ~ 0.0%]
+        Spills        :       0 bytes*
+            Reads     :       0 [0.00e+00 ~ 0.0%]
+            Writes    :       0 [0.00e+00 ~ 0.0%]
+    
+    Notes
+    
+        *Non-overlapping variables and spills may share stack space,
+         so the total stack size might be less than this.
+    
+
+===========================================================================

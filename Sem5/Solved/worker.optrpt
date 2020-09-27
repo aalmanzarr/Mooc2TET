@@ -1,0 +1,158 @@
+Intel(R) Advisor can now assist with vectorization and show optimization
+  report messages with your source code.
+See "https://software.intel.com/en-us/intel-advisor-xe" for details.
+
+Intel(R) C++ Intel(R) 64 Compiler for applications running on Intel(R) 64, Version 17.0.2.174 Build 20170213
+
+Compiler options: -I/opt/intel/compilers_and_libraries_2017.2.174/linux/mpi/intel64/include -c -qopt-report=5 -xMIC-AVX512 -qopenmp -o worker.o
+
+    Report from: Interprocedural optimizations [ipo]
+
+  WHOLE PROGRAM (SAFE) [EITHER METHOD]: false
+  WHOLE PROGRAM (SEEN) [TABLE METHOD]: false
+  WHOLE PROGRAM (READ) [OBJECT READER METHOD]: false
+
+INLINING OPTION VALUES:
+  -inline-factor: 100
+  -inline-min-size: 30
+  -inline-max-size: 230
+  -inline-max-total-size: 2000
+  -inline-max-per-routine: 10000
+  -inline-max-per-compile: 500000
+
+In the inlining report below:
+   "sz" refers to the "size" of the routine. The smaller a routine's size,
+      the more likely it is to be inlined.
+   "isz" refers to the "inlined size" of the routine. This is the amount
+      the calling routine will grow if the called routine is inlined into it.
+      The compiler generally limits the amount a routine can grow by having
+      routines inlined into it.
+
+Begin optimization report for: simulate(float, long, int, float *, float *, int, int, long)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (simulate(float, long, int, float *, float *, int, int, long)) [1/1=100.0%] worker.cc(8,180)
+  -> EXTERN: (22,25) L(float, float, float)
+  -> EXTERN: (29,7) MPI_Send(const void *, int, MPI_Datatype, int, int, MPI_Comm)
+  -> EXTERN: (30,7) MPI_Recv(void *, int, MPI_Datatype, int, int, MPI_Comm, MPI_Status *)
+  -> EXTERN: (33,7) MPI_Send(const void *, int, MPI_Datatype, int, int, MPI_Comm)
+  -> EXTERN: (34,7) MPI_Recv(void *, int, MPI_Datatype, int, int, MPI_Comm, MPI_Status *)
+  -> EXTERN: (36,9) MPI_Recv(void *, int, MPI_Datatype, int, int, MPI_Comm, MPI_Status *)
+  -> EXTERN: (37,9) MPI_Send(const void *, int, MPI_Datatype, int, int, MPI_Comm)
+  -> EXTERN: (41,7) MPI_Send(const void *, int, MPI_Datatype, int, int, MPI_Comm)
+  -> EXTERN: (42,7) MPI_Send(const void *, int, MPI_Datatype, int, int, MPI_Comm)
+  -> EXTERN: (43,7) MPI_Recv(void *, int, MPI_Datatype, int, int, MPI_Comm, MPI_Status *)
+  -> EXTERN: (44,7) MPI_Recv(void *, int, MPI_Datatype, int, int, MPI_Comm, MPI_Status *)
+  -> EXTERN: (46,7) MPI_Recv(void *, int, MPI_Datatype, int, int, MPI_Comm, MPI_Status *)
+  -> EXTERN: (47,7) MPI_Recv(void *, int, MPI_Datatype, int, int, MPI_Comm, MPI_Status *)
+  -> EXTERN: (48,7) MPI_Send(const void *, int, MPI_Datatype, int, int, MPI_Comm)
+  -> EXTERN: (49,7) MPI_Send(const void *, int, MPI_Datatype, int, int, MPI_Comm)
+  -> EXTERN: (52,2) MPI_Allgather(const void *, int, MPI_Datatype, void *, int, MPI_Datatype, MPI_Comm)
+
+
+    Report from: OpenMP optimizations [openmp]
+
+worker.cc(20:1-20:1):OMP:_Z8simulatefliPfS_iil:  OpenMP DEFINED LOOP WAS PARALLELIZED
+
+    Report from: Loop nest, Vector & Auto-parallelization optimizations [loop, vec, par]
+
+
+LOOP BEGIN at worker.cc(20,1)
+<Peeled loop for vectorization>
+   remark #15389: vectorization support: reference d_t1 has unaligned access   [ worker.cc(23,7) ]
+   remark #15389: vectorization support: reference d_t has unaligned access   [ worker.cc(23,22) ]
+   remark #15389: vectorization support: reference d_t has unaligned access   [ worker.cc(23,33) ]
+   remark #15389: vectorization support: reference d_t has unaligned access   [ worker.cc(24,35) ]
+   remark #15389: vectorization support: reference d_t1 has unaligned access   [ worker.cc(25,19) ]
+   remark #15381: vectorization support: unaligned access used inside loop body
+   remark #15410: vectorization support: conversion from int to float will be emulated   [ worker.cc(22,39) ]
+   remark #15305: vectorization support: vector length 16
+   remark #15309: vectorization support: normalized vectorization overhead 0.074
+   remark #15301: PEEL LOOP WAS VECTORIZED
+LOOP END
+
+LOOP BEGIN at worker.cc(20,1)
+   remark #15389: vectorization support: reference d_t1 has unaligned access   [ worker.cc(23,7) ]
+   remark #15389: vectorization support: reference d_t has unaligned access   [ worker.cc(23,22) ]
+   remark #15389: vectorization support: reference d_t has unaligned access   [ worker.cc(23,33) ]
+   remark #15389: vectorization support: reference d_t has unaligned access   [ worker.cc(24,35) ]
+   remark #15389: vectorization support: reference d_t1 has unaligned access   [ worker.cc(25,19) ]
+   remark #15381: vectorization support: unaligned access used inside loop body
+   remark #15410: vectorization support: conversion from int to float will be emulated   [ worker.cc(22,39) ]
+   remark #15305: vectorization support: vector length 16
+   remark #15309: vectorization support: normalized vectorization overhead 0.057
+   remark #15301: OpenMP SIMD LOOP WAS VECTORIZED
+   remark #15442: entire loop may be executed in remainder
+   remark #15450: unmasked unaligned unit stride loads: 4 
+   remark #15451: unmasked unaligned unit stride stores: 1 
+   remark #15475: --- begin vector cost summary ---
+   remark #15476: scalar cost: 131 
+   remark #15477: vector cost: 27.500 
+   remark #15478: estimated potential speedup: 4.240 
+   remark #15484: vector function calls: 1 
+   remark #15487: type converts: 1 
+   remark #15488: --- end vector cost summary ---
+   remark #15489: --- begin vector function matching report ---
+   remark #15490: Function call: L(float, float, float) with simdlen=16, actual parameter types: (uniform,uniform,vector)   [ worker.cc(22,25) ]
+   remark #15492: A suitable vector variant was found (out of 2) with xmm, simdlen=4, unmasked, formal parameter types: (vector,vector,vector)
+   remark #15493: --- end vector function matching report ---
+LOOP END
+
+LOOP BEGIN at worker.cc(20,1)
+<Remainder loop for vectorization>
+   remark #15389: vectorization support: reference d_t1 has unaligned access   [ worker.cc(23,7) ]
+   remark #15389: vectorization support: reference d_t has unaligned access   [ worker.cc(23,22) ]
+   remark #15389: vectorization support: reference d_t has unaligned access   [ worker.cc(23,33) ]
+   remark #15389: vectorization support: reference d_t has unaligned access   [ worker.cc(24,35) ]
+   remark #15389: vectorization support: reference d_t1 has unaligned access   [ worker.cc(25,19) ]
+   remark #15381: vectorization support: unaligned access used inside loop body
+   remark #15410: vectorization support: conversion from int to float will be emulated   [ worker.cc(22,39) ]
+   remark #15305: vectorization support: vector length 16
+   remark #15309: vectorization support: normalized vectorization overhead 0.074
+   remark #15301: REMAINDER LOOP WAS VECTORIZED
+LOOP END
+
+
+Non-optimizable loops:
+
+
+LOOP BEGIN at worker.cc(19,3)
+   remark #15543: loop was not vectorized: loop with function call not considered an optimization candidate.
+LOOP END
+
+    Report from: Code generation optimizations [cg]
+
+worker.cc(23,22):remark #34060: alignment of adjacent dense (unit-strided stencil) loads is (alignment, offset): (1, 0)
+worker.cc(23,22):remark #34050: optimization of adjacent dense (unit-strided stencil) loads seems unprofitable.
+worker.cc(23,22):remark #34055: adjacent dense (unit-strided stencil) loads are not optimized. Details: stride { 4 }, step { 4 }, types { F32-V512, F32-V512, F32-V512 }, number of elements { 16 }, select mask { 0x000000007 }.
+worker.cc(8,180):remark #34051: REGISTER ALLOCATION : [_Z8simulatefliPfS_iil] worker.cc:8
+
+    Hardware registers
+        Reserved     :    2[ rsp rip]
+        Available    :   63[ rax rdx rcx rbx rbp rsi rdi r8-r15 mm0-mm7 zmm0-zmm31 k0-k7]
+        Callee-save  :    6[ rbx rbp r12-r15]
+        Assigned     :   49[ rax rdx rcx rbx rsi rdi r8-r15 zmm0-zmm31 k0-k2]
+        
+    Routine temporaries
+        Total         :     807
+            Global    :     165
+            Local     :     642
+        Regenerable   :     123
+        Spilled       :      92
+        
+    Routine stack
+        Variables     :      92 bytes*
+            Reads     :      31 [3.47e+01 ~ 0.2%]
+            Writes    :      13 [1.17e+02 ~ 0.7%]
+        Spills        :    2984 bytes*
+            Reads     :     135 [2.53e+03 ~ 14.4%]
+            Writes    :     126 [1.01e+03 ~ 5.7%]
+    
+    Notes
+    
+        *Non-overlapping variables and spills may share stack space,
+         so the total stack size might be less than this.
+    
+
+===========================================================================
